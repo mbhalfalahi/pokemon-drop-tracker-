@@ -12,17 +12,16 @@ BASE = Path(__file__).parent
 STATE_FILE = BASE / "products.json"
 
 STORES = [
-    ("The Little Things UAE", "https://littlethingsme.com"),
-    ("Geekay", "https://www.geekay.com"),
+    ("Little Things UAE", "https://littlethingsme.com"),
+    ("Geekay", "https://www.geekay.com/search?q=pokemon"),
     ("Otaku Middle East", "https://otakume.com/collections/pokemon"),
-    ("Pokemon Center", "https://www.pokemoncenter.com"),
-    ("Target", "https://www.target.com"),
-    ("Walmart", "https://www.walmart.com"),
-    ("Best Buy", "https://www.bestbuy.com"),
-    ("Sam's Club", "https://www.samsclub.com"),
-    ("Virgin Megastore UAE", "https://www.virginmegastore.ae"),
+    ("Pokemon Center", "https://www.pokemoncenter.com/search/pokemon"),
+    ("Target", "https://www.target.com/s?searchTerm=pokemon+trading+cards"),
+    ("Walmart", "https://www.walmart.com/search?q=pokemon+trading+cards"),
+    ("Best Buy", "https://www.bestbuy.com/site/searchpage.jsp?st=pokemon+trading+cards"),
+    ("Sam's Club", "https://www.samsclub.com/search?searchTerm=pokemon"),
+    ("Virgin Megastore UAE", "https://www.virginmegastore.ae/en/search?q=pokemon"),
 ]
-
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; PersonalProductMonitor/1.0)"
 }
