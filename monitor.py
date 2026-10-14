@@ -15,7 +15,7 @@ STORES = [
     ("Little Things UAE", "https://littlethingsme.com"),
     ("Geekay", "https://www.geekay.com/search?q=pokemon"),
     ("Otaku Middle East", "https://otakume.com/collections/pokemon"),
-    ("Pokemon Center", "https://www.pokemoncenter.com/search/pokemon"),
+    ("Pokemon Center", "https://www.pokemoncenter.com/category/tcg-cards"),
     ("Target", "https://www.target.com/s?searchTerm=pokemon+trading+cards"),
     ("Walmart", "https://www.walmart.com/search?q=pokemon+trading+cards"),
     ("Best Buy", "https://www.bestbuy.com/site/searchpage.jsp?st=pokemon+trading+cards"),
