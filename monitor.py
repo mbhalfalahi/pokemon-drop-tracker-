@@ -12,7 +12,7 @@ BASE = Path(__file__).parent
 STATE_FILE = BASE / "products.json"
 
 STORES = [
-    ("The Little Things", "https://littlethingsme.com"),
+    ("The Little Things UAE", "https://littlethingsme.com"),
     ("Geekay", "https://www.geekay.com"),
     ("Otaku Middle East", "https://otakume.com/collections/pokemon"),
     ("Pokemon Center", "https://www.pokemoncenter.com"),
