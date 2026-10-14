@@ -7,13 +7,12 @@
 <title>Pokémon Drop Tracker</title>
 <style>
 body{margin:0;background:#11121a;color:#f7f7fb;font-family:Arial,sans-serif;padding:20px}
-h1{font-size:26px;margin-bottom:6px}
-p{color:#b9bbc9}
+h1{font-size:26px}
+p,.muted{color:#b9bbc9}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
-.card{background:#20212d;padding:16px;border-radius:14px}
+.card,.store,.event{background:#20212d;padding:16px;border-radius:14px;margin:10px 0;overflow-wrap:anywhere}
 .num{font-size:24px;font-weight:bold;margin-top:8px}
-.store{background:#20212d;margin:10px 0;padding:14px;border-radius:12px}
-.status{color:#8ee6a1;font-size:13px}
+.status{font-size:13px;color:#8ee6a1}
 a{color:#a9baff}
 button{background:#8b9cff;color:#11121a;border:0;border-radius:9px;padding:10px;font-weight:bold}
 </style>
@@ -21,6 +20,9 @@ button{background:#8b9cff;color:#11121a;border:0;border-radius:9px;padding:10px;
 <body>
 <h1>🎴 Pokémon Drop Tracker</h1>
 <p>Your personal English Pokémon TCG monitor</p>
+
+<button id="refresh">Refresh data</button>
+<p id="updated" class="muted">Loading tracker data...</p>
 
 <div class="stats">
   <div class="card">Websites<div class="num">9</div></div>
@@ -30,13 +32,14 @@ button{background:#8b9cff;color:#11121a;border:0;border-radius:9px;padding:10px;
 <h2>Monitored stores</h2>
 <div id="stores"></div>
 
-<p>Dashboard preview. Live monitoring has not been connected yet.</p>
+<h2>Latest alerts</h2>
+<div id="events"><p class="muted">Loading alerts...</p></div>
 
 <script>
 const stores = [
- ["The Little Things","https://littlethingsme.com"],
+ ["Little Things UAE","https://littlethingsme.com"],
  ["Geekay","https://www.geekay.com"],
- ["Otaku Middle East","https://otakume.com"],
+ ["Otaku Middle East","https://otakume.com/collections/pokemon"],
  ["Pokémon Center","https://www.pokemoncenter.com"],
  ["Target","https://www.target.com"],
  ["Walmart","https://www.walmart.com"],
@@ -45,9 +48,70 @@ const stores = [
  ["Virgin Megastore UAE","https://www.virginmegastore.ae"]
 ];
 
-document.getElementById("stores").innerHTML = stores.map(([name,url]) =>
- `<div class="store"><strong>${name}</strong><p class="status">Monitoring not connected</p><a href="${url}" target="_blank" rel="noopener">Visit store ↗</a></div>`
+const storeBox = document.getElementById("stores");
+const eventBox = document.getElementById("events");
+
+storeBox.innerHTML = stores.map(([name,url]) =>
+ `<div class="store"><strong>${name}</strong><p class="status" id="${storeId(name)}">Waiting for scan data</p><a href="${url}" target="_blank" rel="noopener">Visit store ↗</a></div>`
 ).join("");
+
+function storeId(name) {
+ return "store-" + name.replace(/[^a-z0-9]/gi,"");
+}
+
+function money(product) {
+ if (product.price == null) return "";
+ return ` · ${product.currency || ""} ${product.price}`;
+}
+
+async function loadData() {
+ const updated = document.getElementById("updated");
+ updated.textContent = "Loading tracker data...";
+
+ try {
+  const response = await fetch("./products.json?t=" + Date.now(), {cache:"no-store"});
+  if (!response.ok) throw new Error("Could not load products.json");
+  const data = await response.json();
+  const products = data.products || {};
+  const events = data.events || [];
+
+  document.getElementById("alerts").textContent = events.length;
+
+  updated.textContent = data.last_checked
+   ? "Last scan: " + new Date(data.last_checked).toLocaleString()
+   : "No scan time recorded yet.";
+
+  for (const [name] of stores) {
+   const count = Object.values(products).filter(p => p.store === name).length;
+   const status = document.getElementById(storeId(name));
+   if (status) status.textContent = count
+    ? `${count} products found in latest saved data`
+    : "No product data found yet";
+  }
+
+  if (!events.length) {
+   eventBox.innerHTML = "<p class='muted'>No alerts yet. New products or changes will appear here when detected.</p>";
+  } else {
+   eventBox.innerHTML = events.map(event => {
+    const title = String(event.title || "Product").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const type = String(event.type || "UPDATE").replace(/[&<>"]/g, "");
+    const store = String(event.store || "").replace(/[&<>"]/g, "");
+    const url = /^https?:\/\//i.test(event.url || "") ? event.url : "#";
+    return `<div class="event"><strong>${type}</strong><p>${title}${money(event)}</p><p class="muted">${store}</p><a href="${url}" target="_blank" rel="noopener">View product ↗</a></div>`;
+   }).join("");
+  }
+ } catch (error) {
+  updated.textContent = "Could not load tracker data. Check that products.json exists and GitHub Pages is published.";
+  eventBox.innerHTML = "<p class='muted'>Tracker data is not available yet.</p>";
+  for (const [name] of stores) {
+   const status = document.getElementById(storeId(name));
+   if (status) status.textContent = "Waiting for tracker data";
+  }
+ }
+}
+
+document.getElementById("refresh").addEventListener("click", loadData);
+loadData();
 </script>
 </body>
 </html>
