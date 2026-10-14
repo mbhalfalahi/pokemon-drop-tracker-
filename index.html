@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15151d">
+<title>Pokémon Drop Tracker</title>
+<style>
+body{margin:0;background:#11121a;color:#f7f7fb;font-family:Arial,sans-serif;padding:20px}
+h1{font-size:26px;margin-bottom:6px}
+p{color:#b9bbc9}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.card{background:#20212d;padding:16px;border-radius:14px}
+.num{font-size:24px;font-weight:bold;margin-top:8px}
+.store{background:#20212d;margin:10px 0;padding:14px;border-radius:12px}
+.status{color:#8ee6a1;font-size:13px}
+a{color:#a9baff}
+button{background:#8b9cff;color:#11121a;border:0;border-radius:9px;padding:10px;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>🎴 Pokémon Drop Tracker</h1>
+<p>Your personal English Pokémon TCG monitor</p>
+
+<div class="stats">
+  <div class="card">Websites<div class="num">9</div></div>
+  <div class="card">Alerts<div class="num" id="alerts">0</div></div>
+</div>
+
+<h2>Monitored stores</h2>
+<div id="stores"></div>
+
+<p>Dashboard preview. Live monitoring has not been connected yet.</p>
+
+<script>
+const stores = [
+ ["The Little Things","https://thelittlethingsme.com"],
+ ["Geekay","https://www.geekay.com"],
+ ["Otaku Middle East","https://otakume.com"],
+ ["Pokémon Center","https://www.pokemoncenter.com"],
+ ["Target","https://www.target.com"],
+ ["Walmart","https://www.walmart.com"],
+ ["Best Buy","https://www.bestbuy.com"],
+ ["Sam's Club","https://www.samsclub.com"],
+ ["Virgin Megastore UAE","https://www.virginmegastore.ae"]
+];
+
+document.getElementById("stores").innerHTML = stores.map(([name,url]) =>
+ `<div class="store"><strong>${name}</strong><p class="status">Monitoring not connected</p><a href="${url}" target="_blank" rel="noopener">Visit store ↗</a></div>`
+).join("");
+</script>
+</body>
+</html>
